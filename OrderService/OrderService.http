@@ -1,0 +1,13 @@
+@OrderService_HostAddress = http://localhost:5015
+
+#if (EnableOpenAPI)
+GET {{OrderService_HostAddress}}/openapi/v1.json
+Accept: application/json
+
+###
+#endif
+
+GET {{OrderService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
