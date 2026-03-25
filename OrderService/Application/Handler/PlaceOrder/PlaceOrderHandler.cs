@@ -26,9 +26,13 @@ namespace OrderService.Application.Handler.PlaceOrder
 
         public async Task<int> Handle(PlaceOrderCommand command)
         {
-            var orderId = new Random().Next(1000, 9999);
+            var order = new Order(command.Amount);
 
-            var order = new Order(orderId, command.Amount);
+            // ✅ Save first
+            _db.Orders.Add(order);
+            await _db.SaveChangesAsync();
+
+            Console.WriteLine($"💾 Order saved with ID: {order.Id}");
 
             Console.WriteLine("➡️ Calling Payment...");
 
@@ -43,12 +47,6 @@ namespace OrderService.Application.Handler.PlaceOrder
                 throw new Exception("Payment failed");
 
             Console.WriteLine("✅ Payment successful");
-
-            // ✅ SAVE TO DATABASE
-            _db.Orders.Add(order);
-            await _db.SaveChangesAsync();
-
-            Console.WriteLine("💾 Order saved to DB");
 
             Console.WriteLine("➡️ Publishing event...");
 

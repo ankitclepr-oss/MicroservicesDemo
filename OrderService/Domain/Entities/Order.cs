@@ -8,12 +8,12 @@
         // ✅ Required by EF
         private Order() { }
 
-        public Order(int id, double amount)
+        // ✅ REMOVE Id from constructor
+        public Order(double amount)
         {
             if (amount <= 0)
                 throw new Exception("Invalid amount");
 
-            Id = id;
             Amount = amount;
         }
     }
