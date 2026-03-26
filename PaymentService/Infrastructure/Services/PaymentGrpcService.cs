@@ -4,7 +4,7 @@ using PaymentService.Application.ProcessPayment.Commands;
 using PaymentService.Application.ProcessPayment.Handlers;
 using Serilog.Context;
 
-namespace PaymentService.Services
+namespace PaymentService.Infrastructure.Services
 {
     public class PaymentGrpcService : PaymentGrpc.PaymentGrpcBase
     {

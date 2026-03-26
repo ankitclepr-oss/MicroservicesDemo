@@ -5,7 +5,7 @@ using OrderService.Application.Handler.GetOrders;
 using PaymentService.Application.Common.Interfaces;
 using PaymentService.Application.ProcessPayment.Handlers;
 using PaymentService.Infrastructure.Data;
-using PaymentService.Services;
+using PaymentService.Infrastructure.Services;
 using Serilog;
 using Serilog.Events;
 

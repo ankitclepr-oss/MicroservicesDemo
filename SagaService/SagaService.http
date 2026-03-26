@@ -1,0 +1,13 @@
+@SagaService_HostAddress = http://localhost:5133
+
+#if (EnableOpenAPI)
+GET {{SagaService_HostAddress}}/openapi/v1.json
+Accept: application/json
+
+###
+#endif
+
+GET {{SagaService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

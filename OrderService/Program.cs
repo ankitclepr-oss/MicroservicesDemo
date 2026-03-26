@@ -7,14 +7,16 @@ using OrderService.Application.Common.Interfaces;
 using OrderService.Application.Handler.GetOrders;
 using OrderService.Application.Handler.PlaceOrder;
 using OrderService.Infrastructure.Data;
+using OrderService.Infrastructure.Resilience;
 using Payment.Proto;
 using Polly;
 using Polly.Extensions.Http;
 using Serilog;
 using Serilog.Events;
-using OrderService.Infrastructure.Resilience;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSingleton<GrpcResilienceInterceptor>();
 
 // ✅ OpenTelemetry
 builder.Services.AddOpenTelemetry()
@@ -79,15 +81,7 @@ builder.Services.AddGrpcClient<PaymentGrpc.PaymentGrpcClient>(o =>
 {
     o.Address = new Uri("https://localhost:7002");
 })
-.AddPolicyHandler((sp, request) =>
-{
-    var logger = sp.GetRequiredService<ILogger<Program>>();
-
-    var retry = PollyPolicies.GetRetryPolicy(logger);
-    var circuit = PollyPolicies.GetCircuitBreakerPolicy(logger);
-
-    return Policy.WrapAsync(retry, circuit);
-});
+.AddInterceptor<GrpcResilienceInterceptor>(); 
 
 var app = builder.Build();
 

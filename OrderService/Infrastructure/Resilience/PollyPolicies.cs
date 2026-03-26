@@ -1,16 +1,15 @@
 ﻿using Polly;
-using Polly.Extensions.Http;
+using System.Net.Http;
 
 namespace OrderService.Infrastructure.Resilience
 {
     public static class PollyPolicies
     {
-        // ✅ Retry Policy
+        // ✅ Retry (works for gRPC)
         public static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(ILogger logger)
         {
-            return HttpPolicyExtensions
-                .HandleTransientHttpError()
-                .Or<Grpc.Core.RpcException>()
+            return Policy<HttpResponseMessage>
+                .Handle<Exception>() // 🔥 IMPORTANT: catches RpcException
                 .WaitAndRetryAsync(
                     3,
                     retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
@@ -20,17 +19,16 @@ namespace OrderService.Infrastructure.Resilience
                             "🔁 Retry {RetryCount} after {Delay}s due to {Error}",
                             retryCount,
                             timespan.TotalSeconds,
-                            outcome.Exception?.Message ?? outcome.Result?.StatusCode.ToString()
+                            outcome.Exception?.Message
                         );
                     });
         }
 
-        // ✅ Circuit Breaker Policy
+        // ✅ Circuit Breaker (works for gRPC)
         public static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy(ILogger logger)
         {
-            return HttpPolicyExtensions
-                .HandleTransientHttpError()
-                .Or<Grpc.Core.RpcException>()
+            return Policy<HttpResponseMessage>
+                .Handle<Exception>() // 🔥 IMPORTANT
                 .CircuitBreakerAsync(
                     3,
                     TimeSpan.FromSeconds(10),
@@ -39,7 +37,7 @@ namespace OrderService.Infrastructure.Resilience
                         logger.LogError(
                             "🚨 Circuit OPEN for {Seconds}s due to {Error}",
                             breakDelay.TotalSeconds,
-                            outcome.Exception?.Message ?? outcome.Result?.StatusCode.ToString()
+                            outcome.Exception?.Message
                         );
                     },
                     onReset: () =>
