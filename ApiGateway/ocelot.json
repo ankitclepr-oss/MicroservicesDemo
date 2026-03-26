@@ -1,0 +1,31 @@
+{
+    "Routes": [
+        {
+            "DownstreamPathTemplate": "/api/order/{everything}",
+            "DownstreamScheme": "https",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 7001
+                }
+            ],
+            "UpstreamPathTemplate": "/order/{everything}",
+            "UpstreamHttpMethod": [ "GET", "POST" ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/payment/{everything}",
+            "DownstreamScheme": "https",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 7002
+                }
+            ],
+            "UpstreamPathTemplate": "/payment/{everything}",
+            "UpstreamHttpMethod": [ "GET", "POST" ]
+        }
+    ],
+    "GlobalConfiguration": {
+        "BaseUrl": "https://localhost:7000"
+    }
+}

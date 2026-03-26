@@ -8,5 +8,6 @@ namespace Contract.Messages
     {
         public int OrderId { get; set; }
         public double Amount { get; set; }
+        public string? CorrelationId { get; set; }
     }
 }
