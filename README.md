@@ -12,21 +12,23 @@ RabbitMQ + MassTransit (asynchronous communication) for event-driven workflows
 This hybrid approach reflects real-world distributed system design, balancing performance and scalability.
 
 🧩 Key Components
-Order Service
+Order Service :
 Acts as the entry point (API layer using controllers)
 Publishes events (e.g., order created) to RabbitMQ
-Payment Service
+Payment Service :
 Handles payment processing
 Communicates via gRPC for synchronous operations
-Email Service
+Email Service :
 Consumes events from RabbitMQ
 Sends notifications (simulated)
+
 ⚙️ Tech Stack
 .NET (ASP.NET Core Web API)
 gRPC
 MassTransit
 RabbitMQ
 C#
+
 🎯 Key Features
 Clean separation of concerns using microservices
 Event-driven architecture with message broker
